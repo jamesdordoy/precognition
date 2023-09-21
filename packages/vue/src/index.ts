@@ -53,9 +53,9 @@ export const useForm = <Data extends Record<string, unknown>>(method: RequestMet
     /**
      * Resolve the config for a form submission.
      */
-    const resolveSubmitConfig = (config: Config): Config => ({
+    const resolveSubmitConfig = (config: Config, precognitive = false): Config => ({
         ...config,
-        precognitive: false,
+        precognitive,
         onStart: () => {
             form.processing = true;
 
@@ -116,6 +116,9 @@ export const useForm = <Data extends Record<string, unknown>>(method: RequestMet
             }
 
             return form
+        },
+        async validateAll(config: Config = {}) {
+            return client[resolveMethod(method)](resolveUrl(url), form.data(), resolveSubmitConfig(config, true))
         },
         validating: false,
         valid(name) {
